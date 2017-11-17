@@ -1,0 +1,44 @@
+{
+  "name": "msbios/db",
+  "description": "MSBios Db",
+  "license": "GPL",
+  "keywords": [
+    "php"
+  ],
+  "homepage": "https://github.com/msbios/msbios-db",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "Judzhin Miles",
+      "email": "info@msbios.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "MSBios\\Db\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MSBiosTest\\Db\\": "tests/"
+    }
+  },
+  "require": {
+    "zendframework/zend-db": "^2.8",
+    "msbios/msbios": "^1.0"
+  },
+  "require-dev": {
+    "msbios/test": "^1.0"
+  },
+  "scripts": {
+    "cs-check": "phpcs",
+    "cs-fix": "phpcbf",
+    "test": [
+      "@cs-check",
+      "phpunit --colors=always"
+    ],
+    "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+    "upload-coverage": "coveralls -v",
+    "commit": "git add . && git commit -a -m \"Lazy Composer Commiter\" && git push"
+  }
+}
