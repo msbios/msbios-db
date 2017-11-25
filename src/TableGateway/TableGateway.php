@@ -54,7 +54,6 @@ class TableGateway extends DefaultTableGateway
      */
     public function __call($name, $args)
     {
-
         //go through all the existing pattenrs
         foreach (static::$PATTERNS as $pattern => $function) {
             $matches = null;
