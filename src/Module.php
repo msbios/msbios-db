@@ -24,7 +24,7 @@ class Module implements
     InitProviderInterface
 {
     /** @const VERSION */
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
 
     /**
      * @return mixed
