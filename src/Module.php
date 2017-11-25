@@ -5,11 +5,13 @@
 
 namespace MSBios\Db;
 
+use MSBios\Db\Initializer\TableManagerInitializer;
 use MSBios\ModuleInterface;
 use Zend\Loader\AutoloaderFactory;
 use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Stdlib\ArrayUtils;
 
@@ -21,10 +23,11 @@ use Zend\Stdlib\ArrayUtils;
 class Module implements
     ModuleInterface,
     AutoloaderProviderInterface,
-    InitProviderInterface
+    InitProviderInterface,
+    ServiceProviderInterface
 {
     /** @const VERSION */
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.2';
 
     /**
      * @return mixed
@@ -73,5 +76,21 @@ class Module implements
             TableProviderInterface::class,
             'getTableManagerConfig'
         );
+    }
+
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to
+     * seed such an object.
+     *
+     * @return array|\Zend\ServiceManager\Config
+     */
+    public function getServiceConfig()
+    {
+
+        return [
+            'initializers' => [
+                new TableManagerInitializer
+            ],
+        ];
     }
 }
