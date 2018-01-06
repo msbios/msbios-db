@@ -45,5 +45,8 @@
     "zf": {
       "component": "MSBios\\Db"
     }
-  }
+  },
+  "bin": [
+    "bin/database-backup.sh"
+  ]
 }
