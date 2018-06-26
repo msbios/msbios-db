@@ -1,7 +1,7 @@
 {
   "name": "msbios/db",
   "description": "MSBios Db",
-  "license": "GPL",
+  "license": "MIT",
   "keywords": [
     "php"
   ],

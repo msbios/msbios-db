@@ -6,8 +6,7 @@
 namespace MSBios\Db\Exception;
 
 /**
- * Class Exception
- * @package MSBios\Db\Exception
+ * 
  */
 class Exception extends \Exception
 {

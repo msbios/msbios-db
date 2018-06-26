@@ -17,6 +17,8 @@ namespace MSBios\Db\TableGateway;
  * file that was distributed with this source code.
  */
 use MSBios\Db\Exception\Exception;
+use Zend\Db\ResultSet\ResultSetInterface;
+use Zend\Db\RowGateway\RowGateway;
 use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\TableGateway as DefaultTableGateway;
 
@@ -32,13 +34,13 @@ class TableGateway extends DefaultTableGateway
      * @var array
      */
     protected static $PATTERNS = [
-        '/^getAll(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__getAll',
-        '/^getByColumns(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__getBy',
-        '/^getAllByColumns(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__getAll',
-        '/^getBy(?P<fields>[A-Z][a-zA-Z0-9]+)(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__getBy',
-        '/^getAllBy(?P<fields>[A-Z][a-zA-Z0-9]+)(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__getAll',
-        '/^getLike(?P<fields>[A-Z][a-zA-Z0-9]+)(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__getLike',
-        '/^getAllLike(?P<fields>[A-Z][a-zA-Z0-9]+)(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__getAllLike',
+        '/^fetchAll(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__fetchAll',
+        '/^fetchByColumns(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__fetchBy',
+        '/^fetchAllByColumns(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__fetchAll',
+        '/^fetchBy(?P<fields>[A-Z][a-zA-Z0-9]+)(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__fetchBy',
+        '/^fetchAllBy(?P<fields>[A-Z][a-zA-Z0-9]+)(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__fetchAll',
+        '/^fetchLike(?P<fields>[A-Z][a-zA-Z0-9]+)(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__fetchLike',
+        '/^fetchAllLike(?P<fields>[A-Z][a-zA-Z0-9]+)(?:OrderBy(?P<orderBy>[A-Z][a-zA-Z0-9]+))?(?:Limit(?P<limit>[0-9]+)(?:From(?P<offset>[0-9]+))?)?$/U' => '__fetchAllLike',
         '/^count$/U' => '__count',
         '/^countBy(?P<fields>[A-Z][a-zA-Z0-9]+)?$/U' => '__countBy',
         '/^countDistinctBy(?P<fields>[A-Z][a-zA-Z0-9]+)?$/U' => '__countDistinctBy',
@@ -51,6 +53,7 @@ class TableGateway extends DefaultTableGateway
      * @param $name
      * @param $args
      * @return mixed
+     * @throws Exception
      */
     public function __call($name, $args)
     {
@@ -75,6 +78,7 @@ class TableGateway extends DefaultTableGateway
 
     /**
      * Handler for RemoveBy magic functions
+     *
      * @param $matches
      * @param $args
      * @return int
@@ -95,14 +99,15 @@ class TableGateway extends DefaultTableGateway
      * Handler for GetBy magic function
      * @param $matches
      * @param $args
-     * @return array|\Zend\Db\ResultSet\ResultSetInterface
+     * @return array|\ArrayObject|null|RowGateway
      */
-    private function __getBy($matches, $args)
+    private function __fetchBy($matches, $args)
     {
-        //select a single row and return it
+        /** @var ResultSetInterface $resultSet select a single row and return it */
         $resultSet = $this->_getResultSet($matches, $args);
-        $entity = $resultSet->current();
-        return $entity;
+        /** @var array|\ArrayObject|null|RowGateway $row */
+        $row = $resultSet->current();
+        return $row;
     }
 
     /**
@@ -111,16 +116,19 @@ class TableGateway extends DefaultTableGateway
      * @param $args
      * @return array
      */
-    private function __getAll($matches, $args)
+    private function __fetchAll($matches, $args)
     {
-        //Select all the matching results
+        /** @var ResultSetInterface $resultSet Select all the matching results */
         $resultSet = $this->_getResultSet($matches, $args);
-        //Parse the result set and return all the entitites
-        $entities = [];
-        foreach ($resultSet as $entity) {
-            $entities[] = $entity;
+        /** @var array $rows Parse the result set and return all the entitites */
+        $rows = [];
+
+        /** @var array|\ArrayObject|null|RowGateway $row */
+        foreach ($resultSet as $row) {
+            $rows[] = $row;
         }
-        return $entities;
+
+        return $rows;
     }
 
     /**
@@ -129,14 +137,19 @@ class TableGateway extends DefaultTableGateway
      * @param $args
      * @return array
      */
-    private function __getAllLike($matches, $args)
+    private function __fetchAllLike($matches, $args)
     {
+        /** @var ResultSetInterface $resultSet */
         $resultSet = $this->_getLikeResultSet($matches, $args);
-        $entities = [];
+
+        /** @var array $rows */
+        $rows = [];
+
+        /** @var array|\ArrayObject|null|RowGateway $row */
         foreach ($resultSet as $entity) {
-            $entities[] = $entity;
+            $rows[] = $entity;
         }
-        return $entities;
+        return $rows;
     }
 
     /**
