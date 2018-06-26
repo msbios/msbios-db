@@ -5,6 +5,7 @@
 
 namespace MSBios\Db;
 
+use MSBios\Db\Feature\TableProviderInterface;
 use MSBios\Db\Initializer\TableManagerInitializer;
 use MSBios\ModuleInterface;
 use Zend\Loader\AutoloaderFactory;
@@ -27,7 +28,7 @@ class Module implements
     ServiceProviderInterface
 {
     /** @const VERSION */
-    const VERSION = '1.0.3';
+    const VERSION = '1.0.5';
 
     /**
      * @return mixed
@@ -88,9 +89,9 @@ class Module implements
     {
 
         return [
-            'initializers' => [
-                new TableManagerInitializer
-            ],
+            // 'initializers' => [
+            //     new TableManagerInitializer
+            // ],
         ];
     }
 }
