@@ -18,6 +18,7 @@ class TablePluginManager extends AbstractPluginManager
     /**
      * @param $name
      * @param $id
+     * @return mixed
      */
     public function find($name, $id)
     {
@@ -29,6 +30,7 @@ class TablePluginManager extends AbstractPluginManager
 
         /** @var  $tableGateway */
         $tableGateway = $this->get($name);
-        // TODO Add functionality
+
+        return $tableGateway->fetchById($id);
     }
 }

@@ -17,11 +17,8 @@ use Zend\ServiceManager\Initializer\InitializerInterface;
 class TableManagerInitializer implements InitializerInterface
 {
     /**
-     * Initialize the given instance
-     *
-     * @param  ContainerInterface $container
-     * @param  object $instance
-     * @return void
+     * @param ContainerInterface $container
+     * @param object $instance
      */
     public function __invoke(ContainerInterface $container, $instance)
     {

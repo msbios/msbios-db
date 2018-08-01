@@ -13,5 +13,5 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
  */
 class TableServiceNotFoundException extends ServiceNotFoundException
 {
-
+    // ...
 }
