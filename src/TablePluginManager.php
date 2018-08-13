@@ -3,10 +3,10 @@
  * @access protected
  * @author Judzhin Miles <info[woof-woof]msbios.com>
  */
-
 namespace MSBios\Db;
 
 use MSBios\Db\Exception\TableServiceNotFoundException;
+use MSBios\Db\TableGateway\TableGatewayInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 
 /**
@@ -24,13 +24,13 @@ class TablePluginManager extends AbstractPluginManager
     {
         if (! $this->has($name)) {
             throw new TableServiceNotFoundException(
-                'Table Service "' . $name . '" Not Found'
+                "Table Service {$name} Not Found"
             );
         }
 
-        /** @var  $tableGateway */
-        $tableGateway = $this->get($name);
+        /** @var TableGatewayInterface $tableGatewayService */
+        $tableGatewayService = $this->get($name);
 
-        return $tableGateway->fetchById($id);
+        return $tableGatewayService->fetchById($id);
     }
 }

@@ -1,21 +1,13 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: judzhin
- * Date: 11/17/17
- * Time: 11:38 AM
- */
-
-namespace MSBios\Db\TableGateway;
-
-/**
- * This file is part of ZeDb
- *
- * (c) 2012 ZendExperts <team@zendexperts.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @access protected
+ * @author ZendExperts <team@zendexperts.com>, Judzhin Miles <info[woof-woof]msbios.com>
  */
+namespace MSBios\Db\TableGateway;
+
 use MSBios\Db\Exception\Exception;
 use Zend\Db\ResultSet\ResultSetInterface;
 use Zend\Db\RowGateway\RowGateway;
@@ -24,10 +16,11 @@ use Zend\Db\TableGateway\TableGateway as DefaultTableGateway;
 
 /**
  * Table Gateway class for requests to the database using simplified functions calls
- * @package ZeDb
+ *
+ * @package MSBios\Db\TableGateway
  * @author Cosmin Harangus <cosmin@zendexperts.com>
  */
-class TableGateway extends DefaultTableGateway
+class TableGateway extends DefaultTableGateway implements TableGatewayInterface
 {
     /**
      * Available function patterns that can be called to execute requests on the database
@@ -57,23 +50,34 @@ class TableGateway extends DefaultTableGateway
      */
     public function __call($name, $args)
     {
-        //go through all the existing pattenrs
+        /**
+         * Go through all the existing pattenrs
+         * @var string $pattern
+         * @var string $function
+         */
         foreach (static::$PATTERNS as $pattern => $function) {
             $matches = null;
             $found = preg_match($pattern, $name, $matches);
             //if a matched pattern was found, call the associated function with the matches and args and return the result
             if ($found) {
+
+                /** @var array $options */
                 $options = [];
+                /**
+                 * @var int $key
+                 * @var  $value
+                 */
                 foreach ($matches as $key => $value) {
                     if (! is_int($key)) {
                         $options[$key] = $value;
                     }
                 }
+
                 return $this->$function($options, $args);
             }
         }
 
-        throw new Exception('Invalid method called: ' . $name);
+        throw new Exception("Invalid method called: {$name}");
     }
 
     /**
@@ -120,6 +124,9 @@ class TableGateway extends DefaultTableGateway
     {
         /** @var ResultSetInterface $resultSet Select all the matching results */
         $resultSet = $this->_getResultSet($matches, $args);
+
+        return $resultSet;
+
         /** @var array $rows Parse the result set and return all the entitites */
         $rows = [];
 
@@ -146,14 +153,15 @@ class TableGateway extends DefaultTableGateway
         $rows = [];
 
         /** @var array|\ArrayObject|null|RowGateway $row */
-        foreach ($resultSet as $entity) {
-            $rows[] = $entity;
+        foreach ($resultSet as $row) {
+            $rows[] = $row;
         }
         return $rows;
     }
 
     /**
      * Handler for count magic function
+     *
      * @return int
      */
     private function __count()
@@ -163,6 +171,7 @@ class TableGateway extends DefaultTableGateway
 
     /**
      * Handler for countBy magic function
+     *
      * @param array $matches
      * @return int
      */
@@ -173,6 +182,7 @@ class TableGateway extends DefaultTableGateway
 
     /**
      * Handler for countDistinctBy magic function
+     *
      * @param array $matches
      * @return int
      */
@@ -363,6 +373,7 @@ class TableGateway extends DefaultTableGateway
 
     /**
      * Transform keys from camelCase to underscode
+     *
      * @param $keys
      * @return array|string
      */

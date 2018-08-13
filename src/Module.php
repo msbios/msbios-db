@@ -1,12 +1,11 @@
 <?php
 /**
  * @access protected
+ * @author Judzhin Miles <info[woof-woof]msbios.com>
  */
-
 namespace MSBios\Db;
 
 use MSBios\Db\Feature\TableProviderInterface;
-use MSBios\Db\Initializer\TableManagerInitializer;
 use MSBios\ModuleInterface;
 use Zend\Loader\AutoloaderFactory;
 use Zend\Loader\StandardAutoloader;
@@ -89,9 +88,7 @@ class Module implements
     {
 
         return [
-            // 'initializers' => [
-            //     new TableManagerInitializer
-            // ],
+            // ...
         ];
     }
 }
