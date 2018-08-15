@@ -5,6 +5,9 @@
  */
 
 namespace MSBios\Db;
+use MSBios\Db\Adapter\AdapterServiceFactory;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Adapter\AdapterInterface;
 
 /**
  * Class ConfigProvider
@@ -31,11 +34,20 @@ class ConfigProvider
     {
         return [
             'factories' => [
+
+                AdapterInterface::class =>
+                    AdapterServiceFactory::class,
+
                 TablePluginManager::class =>
                     Factory\TablePluginManagerFactory::class
             ],
             'aliases' => [
-                'TableManager' => TablePluginManager::class
+
+                Adapter::class =>
+                    AdapterInterface::class,
+
+                'TableManager' =>
+                    TablePluginManager::class
             ]
         ];
     }

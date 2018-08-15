@@ -21,15 +21,4 @@ return [
             \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
         ],
     ],
-
-    'service_manager' => [
-        'factories' => [
-            AdapterInterface::class =>
-                AdapterServiceFactory::class,
-        ],
-        'aliases' => [
-            Adapter::class =>
-                AdapterInterface::class,
-        ]
-    ]
 ];
