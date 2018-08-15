@@ -8,6 +8,7 @@ namespace MSBios\Db;
 
 use MSBios\Db\Adapter\AdapterServiceFactory;
 use Zend\Db\Adapter\Adapter;
+use Zend\Db\Adapter\AdapterInterface;
 
 return [
 
@@ -23,8 +24,12 @@ return [
 
     'service_manager' => [
         'factories' => [
-            Adapter::class =>
+            AdapterInterface::class =>
                 AdapterServiceFactory::class,
+        ],
+        'aliases' => [
+            Adapter::class =>
+                AdapterInterface::class,
         ]
     ]
 ];
