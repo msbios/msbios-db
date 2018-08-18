@@ -5,20 +5,21 @@
  */
 namespace MSBios\DB\Profiler;
 
+use Zend\Log\Logger;
+use Zend\Log\LoggerInterface;
+
 /**
  * Class Logging
  * @package MSBios\DB\Profiler
  */
 class Logging extends Profiler
 {
-    /**
-     * @var Logger
-     */
+    /** @var  LoggerInterface */
     protected $logger;
-    /**
-     * @var int
-     */
+
+    /** @var int  */
     protected $priority = Logger::DEBUG;
+
     /**
      * How many query profiles could be stored in memory.
      * Useful for long-running scripts with tons of queries that can take all the memory.
@@ -29,20 +30,29 @@ class Logging extends Profiler
      * @var int
      */
     protected $maxProfiles = 100;
+
     /**
      * Query parameters to log on query start
      *
      * @var array
      * @see Query
      */
-    protected $parametersStart = array('sql', 'parameters');
+    protected $parametersStart = ['sql', 'parameters'];
+
     /**
      * Query parameters to log on query finish
      *
      * @var array
      * @see Query
      */
-    protected $parametersFinish = array('elapsed');
+    protected $parametersFinish = ['elapsed'];
+
+    /**
+     * Logging constructor.
+     * @param Logger $logger
+     * @param bool $enabled
+     * @param array $options
+     */
     public function __construct(Logger $logger, $enabled = true, array $options = array())
     {
         parent::__construct($enabled);
@@ -52,15 +62,29 @@ class Logging extends Profiler
         if (isset($options['parametersStart'])) $this->setParametersStart($options['parametersStart']);
         if (isset($options['parametersFinish'])) $this->setParametersFinish($options['parametersFinish']);
     }
+
+    /**
+     * @param $sql
+     * @param null $parameters
+     * @param null $stack
+     */
     public function startQuery($sql, $parameters = null, $stack = null) {
         parent::startQuery($sql, $parameters, $stack);
         $this->logStart();
     }
+
+    /**
+     *
+     */
     public function endQuery() {
         parent::endQuery();
         $this->logEnd();
         $this->trimToMaxQueries();
     }
+
+    /**
+     *
+     */
     private function logStart() {
         /** @var Query $lastQuery */
         $lastQuery = end($this->profiles);
@@ -70,6 +94,10 @@ class Logging extends Profiler
             array_intersect_key($lastQuery->toArray(), array_flip($this->getParametersStart()))
         );
     }
+
+    /**
+     *
+     */
     private function logEnd() {
         /** @var Query $lastQuery */
         $lastQuery = end($this->profiles);
@@ -79,12 +107,17 @@ class Logging extends Profiler
             array_intersect_key($lastQuery->toArray(), array_flip($this->getParametersFinish()))
         );
     }
+
+    /**
+     *
+     */
     private function trimToMaxQueries() {
         $maxProfiles = $this->getMaxProfiles();
         if ($maxProfiles > -1 && count($this->profiles) > $maxProfiles) {
             array_shift($this->profiles);
         }
     }
+
     /**
      * @param int $level
      */
@@ -92,6 +125,7 @@ class Logging extends Profiler
     {
         $this->priority = $level;
     }
+
     /**
      * @return int
      */
@@ -99,6 +133,7 @@ class Logging extends Profiler
     {
         return $this->priority;
     }
+
     /**
      * @param \Zend\Log\Logger $logger
      */
@@ -106,6 +141,7 @@ class Logging extends Profiler
     {
         $this->logger = $logger;
     }
+
     /**
      * @return \Zend\Log\Logger
      */
@@ -113,6 +149,7 @@ class Logging extends Profiler
     {
         return $this->logger;
     }
+
     /**
      * @param int $maxProfiles
      */
@@ -120,6 +157,7 @@ class Logging extends Profiler
     {
         $this->maxProfiles = $maxProfiles;
     }
+
     /**
      * @return int
      */
@@ -127,6 +165,7 @@ class Logging extends Profiler
     {
         return $this->maxProfiles;
     }
+
     /**
      * @param array $parametersFinish
      */
@@ -134,6 +173,7 @@ class Logging extends Profiler
     {
         $this->parametersFinish = $parametersFinish;
     }
+
     /**
      * @return array
      */
@@ -141,6 +181,7 @@ class Logging extends Profiler
     {
         return $this->parametersFinish;
     }
+
     /**
      * @param array $parametersStart
      */
@@ -148,6 +189,7 @@ class Logging extends Profiler
     {
         $this->parametersStart = $parametersStart;
     }
+
     /**
      * @return array
      */
