@@ -4,7 +4,7 @@
  * @author Judzhin Miles <info[woof-woof]msbios.com>
  */
 
-namespace MSBios\DB\Profiler;
+namespace MSBios\Db\Profiler;
 
 /**
  * Class Query
@@ -37,7 +37,7 @@ class Query
      * @param null $parameters
      * @param array $stack
      */
-    public function __construct($sql, $queryType, $parameters = null, $stack = array())
+    public function __construct($sql, $queryType, $parameters = null, $stack = [])
     {
         $this->sql = $sql;
         $this->queryType = $queryType;
@@ -76,7 +76,7 @@ class Query
      */
     public function getElapsedTime()
     {
-        if (!$this->hasEnded()) {
+        if (! $this->hasEnded()) {
             return false;
         }
         return $this->endTime - $this->startTime;

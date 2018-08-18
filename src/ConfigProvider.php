@@ -5,6 +5,7 @@
  */
 
 namespace MSBios\Db;
+
 use MSBios\Db\Adapter\AdapterServiceFactory;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\AdapterInterface;

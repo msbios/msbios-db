@@ -3,14 +3,14 @@
  * @access protected
  * @author Judzhin Miles <info[woof-woof]msbios.com>
  */
-namespace MSBios\DB\Profiler;
+namespace MSBios\Db\Profiler;
 
 use Zend\Log\Logger;
 use Zend\Log\LoggerInterface;
 
 /**
  * Class Logging
- * @package MSBios\DB\Profiler
+ * @package MSBios\Db\Profiler
  */
 class Logging extends Profiler
 {
@@ -53,14 +53,22 @@ class Logging extends Profiler
      * @param bool $enabled
      * @param array $options
      */
-    public function __construct(Logger $logger, $enabled = true, array $options = array())
+    public function __construct(Logger $logger, $enabled = true, array $options = [])
     {
         parent::__construct($enabled);
         $this->setLogger($logger);
-        if (isset($options['priority'])) $this->setPriority($options['priority']);
-        if (isset($options['maxProfiles'])) $this->setMaxProfiles($options['maxProfiles']);
-        if (isset($options['parametersStart'])) $this->setParametersStart($options['parametersStart']);
-        if (isset($options['parametersFinish'])) $this->setParametersFinish($options['parametersFinish']);
+        if (isset($options['priority'])) {
+            $this->setPriority($options['priority']);
+        }
+        if (isset($options['maxProfiles'])) {
+            $this->setMaxProfiles($options['maxProfiles']);
+        }
+        if (isset($options['parametersStart'])) {
+            $this->setParametersStart($options['parametersStart']);
+        }
+        if (isset($options['parametersFinish'])) {
+            $this->setParametersFinish($options['parametersFinish']);
+        }
     }
 
     /**
@@ -68,7 +76,8 @@ class Logging extends Profiler
      * @param null $parameters
      * @param null $stack
      */
-    public function startQuery($sql, $parameters = null, $stack = null) {
+    public function startQuery($sql, $parameters = null, $stack = null)
+    {
         parent::startQuery($sql, $parameters, $stack);
         $this->logStart();
     }
@@ -76,7 +85,8 @@ class Logging extends Profiler
     /**
      *
      */
-    public function endQuery() {
+    public function endQuery()
+    {
         parent::endQuery();
         $this->logEnd();
         $this->trimToMaxQueries();
@@ -85,7 +95,8 @@ class Logging extends Profiler
     /**
      *
      */
-    private function logStart() {
+    private function logStart()
+    {
         /** @var Query $lastQuery */
         $lastQuery = end($this->profiles);
         $this->getLogger()->log(
@@ -98,7 +109,8 @@ class Logging extends Profiler
     /**
      *
      */
-    private function logEnd() {
+    private function logEnd()
+    {
         /** @var Query $lastQuery */
         $lastQuery = end($this->profiles);
         $this->getLogger()->log(
@@ -111,7 +123,8 @@ class Logging extends Profiler
     /**
      *
      */
-    private function trimToMaxQueries() {
+    private function trimToMaxQueries()
+    {
         $maxProfiles = $this->getMaxProfiles();
         if ($maxProfiles > -1 && count($this->profiles) > $maxProfiles) {
             array_shift($this->profiles);

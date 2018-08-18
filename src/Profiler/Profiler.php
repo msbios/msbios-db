@@ -4,14 +4,13 @@
  * @author Judzhin Miles <info[woof-woof]msbios.com>
  */
 
-namespace MSBios\DB\Profiler;
-
+namespace MSBios\Db\Profiler;
 
 use Zend\Db\Adapter\Profiler\ProfilerInterface;
 
 /**
  * Class Profiler
- * @package MSBios\DB\Profiler
+ * @package MSBios\Db\Profiler
  */
 class Profiler implements ProfilerInterface
 {
@@ -133,7 +132,8 @@ class Profiler implements ProfilerInterface
     public function profilerStart($target)
     {
         $this->startQuery(
-            $target->getSql(), $target->getParameterContainer()->getNamedArray()
+            $target->getSql(),
+            $target->getParameterContainer()->getNamedArray()
         );
     }
 
