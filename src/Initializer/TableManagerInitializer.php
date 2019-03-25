@@ -17,6 +17,8 @@ use Zend\ServiceManager\Initializer\InitializerInterface;
 class TableManagerInitializer implements InitializerInterface
 {
     /**
+     * @inheritdoc
+     *
      * @param ContainerInterface $container
      * @param object $instance
      */

@@ -50,22 +50,24 @@ class Logging extends Profiler
     /**
      * Logging constructor.
      * @param Logger $logger
-     * @param bool $enabled
      * @param array $options
      */
-    public function __construct(Logger $logger, $enabled = true, array $options = [])
+    public function __construct(Logger $logger, array $options = [])
     {
-        parent::__construct($enabled);
         $this->setLogger($logger);
+
         if (isset($options['priority'])) {
             $this->setPriority($options['priority']);
         }
+
         if (isset($options['maxProfiles'])) {
             $this->setMaxProfiles($options['maxProfiles']);
         }
+
         if (isset($options['parametersStart'])) {
             $this->setParametersStart($options['parametersStart']);
         }
+
         if (isset($options['parametersFinish'])) {
             $this->setParametersFinish($options['parametersFinish']);
         }
