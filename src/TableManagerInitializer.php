@@ -3,16 +3,14 @@
  * @access protected
  * @author Judzhin Miles <info[woof-woof]msbios.com>
  */
-namespace MSBios\Db\Initializer;
+namespace MSBios\Db;
 
 use Interop\Container\ContainerInterface;
-use MSBios\Db\TableManagerAwareInterface;
-use MSBios\Db\TablePluginManager;
 use Zend\ServiceManager\Initializer\InitializerInterface;
 
 /**
  * Class TableManagerInitializer
- * @package MSBios\Db\Initializer
+ * @package MSBios\Db
  */
 class TableManagerInitializer implements InitializerInterface
 {

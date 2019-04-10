@@ -7,16 +7,19 @@
 namespace MSBios\Db\Adapter;
 
 use Interop\Container\ContainerInterface;
+use MSBios\Db\Profiler\Logging as LoggingProfiler;
+use MSBios\Db\Profiler\Profiler;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\AdapterInterface;
-use Zend\Db\Adapter\AdapterServiceFactory as DefaultAdapterServiceFactory;
-use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
+use Zend\Db\Adapter\Profiler\ProfilerInterface;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Stream;
 
 /**
  * Class AdapterServiceFactory
  * @package MSBios\Db\Adapter
  */
-class AdapterServiceFactory extends DefaultAdapterServiceFactory
+class ProfileServiceFactory extends AdapterServiceFactory
 {
     /**
      * @inheritdoc
@@ -28,16 +31,20 @@ class AdapterServiceFactory extends DefaultAdapterServiceFactory
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var array $config */
-        $config = $container->get('config');
-
-        if (array_key_exists($requestedName, $config)) {
-            return new Adapter($config[$requestedName]);
-        }
-
         /** @var AdapterInterface $adapter */
         $adapter = parent::__invoke($container, $requestedName, $options);
-        GlobalAdapterFeature::setStaticAdapter($adapter);
+
+        /** @var ProfilerInterface $profiler */
+        $profiler = new Profiler;
+
+        if ('cli' == php_sapi_name()) {
+            $logger = (new Logger)
+                ->addWriter(new Stream('php://output'), Logger::DEBUG);
+
+            $profiler = new LoggingProfiler($logger);
+        }
+
+        $adapter->setProfiler($profiler);
 
         return $adapter;
     }

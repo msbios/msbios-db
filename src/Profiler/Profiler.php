@@ -138,10 +138,10 @@ class Profiler implements ProfilerInterface
     }
 
     /**
-     *
+     * @return bool
      */
     public function profilerFinish()
     {
-        $this->endQuery();
+        return $this->endQuery();
     }
 }
