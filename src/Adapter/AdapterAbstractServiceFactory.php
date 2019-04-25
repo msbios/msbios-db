@@ -7,16 +7,15 @@
 namespace MSBios\Db\Adapter;
 
 use Interop\Container\ContainerInterface;
-use Zend\Db\Adapter\Adapter;
+use Zend\Db\Adapter\AdapterAbstractServiceFactory as DefaultAdapterAbstractServiceFactory;
 use Zend\Db\Adapter\AdapterInterface;
-use Zend\Db\Adapter\AdapterServiceFactory as DefaultAdapterServiceFactory;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 
 /**
- * Class AdapterServiceFactory
+ * Class AdapterAbstractServiceFactory
  * @package MSBios\Db\Adapter
  */
-class AdapterServiceFactory extends DefaultAdapterServiceFactory
+class AdapterAbstractServiceFactory extends DefaultAdapterAbstractServiceFactory
 {
     /** @var AdapterInterface */
     protected static $adapter;
@@ -27,7 +26,7 @@ class AdapterServiceFactory extends DefaultAdapterServiceFactory
      * @param ContainerInterface $container
      * @param string $requestedName
      * @param array|null $options
-     * @return Adapter|AdapterInterface
+     * @return \Zend\Db\Adapter\Adapter
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
@@ -39,4 +38,5 @@ class AdapterServiceFactory extends DefaultAdapterServiceFactory
 
         return self::$adapter;
     }
+
 }
