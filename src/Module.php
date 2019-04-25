@@ -20,7 +20,7 @@ class Module extends \MSBios\Module implements
     ServiceProviderInterface
 {
     /** @const VERSION */
-    const VERSION = '1.0.15';
+    const VERSION = '1.0.16';
 
     /**
      * @inheritdoc

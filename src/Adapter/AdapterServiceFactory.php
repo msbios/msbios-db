@@ -7,6 +7,7 @@
 namespace MSBios\Db\Adapter;
 
 use Interop\Container\ContainerInterface;
+use MSBios\Db\Exception\RuntimeException;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\Adapter\AdapterServiceFactory as DefaultAdapterServiceFactory;
@@ -18,6 +19,9 @@ use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
  */
 class AdapterServiceFactory extends DefaultAdapterServiceFactory
 {
+    /** @var AdapterInterface */
+    protected static $adapter;
+
     /**
      * @inheritdoc
      *
@@ -28,17 +32,13 @@ class AdapterServiceFactory extends DefaultAdapterServiceFactory
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var array $config */
-        $config = $container->get('config');
-
-        if (array_key_exists($requestedName, $config)) {
-            return new Adapter($config[$requestedName]);
+        if (!self::$adapter instanceof AdapterInterface) {
+            /** @var AdapterInterface $adapter */
+            $adapter = parent::__invoke($container, $requestedName, $options);
+            GlobalAdapterFeature::setStaticAdapter($adapter);
+            self::$adapter = $adapter;
         }
 
-        /** @var AdapterInterface $adapter */
-        $adapter = parent::__invoke($container, $requestedName, $options);
-        GlobalAdapterFeature::setStaticAdapter($adapter);
-
-        return $adapter;
+        return self::$adapter;
     }
 }
